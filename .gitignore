@@ -1,6 +1,9 @@
-palindromo
+palindromo/palindromo
 
+compile_commands.json
+
+.cache/
+*.o
 *.class
-pub.*
 pubs.*
 teste.*
