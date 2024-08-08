@@ -12,7 +12,7 @@ int main(void)
 	wchar_t input[TAM_BUF]; // Buffer fixo de texto para a entrada.
 
 	// Ajusta o locale do programa para português em UTF-8 (somente Linux).
-	setlocale(LC_ALL, "pt_BR.UTF-8");
+	setlocale(LC_ALL, "C.UTF-8");
 
 	// Lê uma linha da entrada. Ignora newlines.
 	wscanf(L"%l[^\n\r]s", input);
