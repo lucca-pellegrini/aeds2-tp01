@@ -43,4 +43,4 @@ testjava: $(JAVABIN)
 
 # Como excluir artefatos de compilação.
 clean:
-	$(RM) $(BIN)
+	$(RM) $(BIN) $(TEST)
