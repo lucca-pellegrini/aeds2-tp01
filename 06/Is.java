@@ -74,11 +74,10 @@ public class Is {
         boolean res = true;
 
         // Tenta ler `texto` como objeto Double. Se não conseguir por conta de
-        // formatação numérica errada, não é número real.
+        // formatação numérica errada, não é número real. Mas é necessário,
+        // primeiro, substituir quaisquer vírgulas no texto por pontos.
         try {
-            // TODO: consertar esse pedaço, no qual números com vírgula
-            // deveriam retornar true, mas retornam false.
-            Double.parseDouble(texto);
+            Double.parseDouble(texto.replaceAll(",", "."));
         } catch (NumberFormatException e) {
             res = false;
         }
