@@ -23,8 +23,8 @@ public class AlteracaoAleatoria {
 
     public static String codificar(String texto) {
         StringBuilder out = new StringBuilder(texto.length());
-        char orig = charAleatorio(GERADOR); // Caractere que mudaremos.
-        char alvo = charAleatorio(GERADOR); // Caractere que o substituirá.
+        char orig = charAleatorio(); // Caractere que mudaremos.
+        char alvo = charAleatorio(); // Caractere que o substituirá.
 
         for (int i = 0; i < texto.length(); ++i) {
             char c = texto.charAt(i);
@@ -36,7 +36,7 @@ public class AlteracaoAleatoria {
     }
 
     // Método copiado verbatim do enunciado.
-    public static char charAleatorio(Random GERADOR) {
+    public static char charAleatorio() {
         return (char) ('a' + (Math.abs(GERADOR.nextInt()) % 26));
     }
 }
