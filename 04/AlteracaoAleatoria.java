@@ -22,17 +22,17 @@ public class AlteracaoAleatoria {
     }
 
     public static String codificar(String texto) {
-        StringBuilder out = new StringBuilder(texto.length());
+        String out = new String();
         char orig = charAleatorio(); // Caractere que mudaremos.
         char alvo = charAleatorio(); // Caractere que o substituirá.
 
         for (int i = 0; i < texto.length(); ++i) {
             char c = texto.charAt(i);
-            c = (c == orig) ? alvo : c; // Se for `orig`, substituimos por alvo
-            out.append(c);
+            // Se o caractere for `orig`, substituimos por `alvo`.
+            out += (c == orig) ? alvo : c;
         }
 
-        return out.toString();
+        return out;
     }
 
     // Método copiado verbatim do enunciado.
