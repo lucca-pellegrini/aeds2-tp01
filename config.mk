@@ -28,9 +28,6 @@ all: $(BIN)
 # Alvos que não são arquivos.
 .PHONY: all clean test testc testjava
 
-# Como executar os testes.
-test: testc testjava
-
 testc: $(CBIN)
 	$(CBIN) < $(INPUT) > $(TEST)
 	@diff --report-identical-files --strip-trailing-cr $(OUTPUT) $(TEST)
