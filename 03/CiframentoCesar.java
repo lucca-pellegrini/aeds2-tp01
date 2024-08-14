@@ -16,15 +16,14 @@ public class CiframentoCesar {
     }
 
     public static String cifra(String texto) {
-        // Caracteres em um objeto StringBuilder podem ser modificados.
-        StringBuilder cifra = new StringBuilder(texto.length());
+        String cifra = new String();
 
         for (int i = 0; i < texto.length(); ++i) {
             char c = texto.charAt(i);
-            c += (c <= 127) ? CHAVE : 0; // Se for ASCII (0–127), soma à chave.
-            cifra.append(c);
+            // Se o caractere for ASCII (0–127), deve ser somado à chave.
+            cifra += (char) ((c <= 127) ? c + CHAVE : c);
         }
 
-        return cifra.toString();
+        return cifra;
     }
 }
