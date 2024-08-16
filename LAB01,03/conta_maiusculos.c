@@ -4,7 +4,7 @@
 
 #define TAM_BUF (1 << 9) // Tamanho do buffer fixo de texto (512 caracteres).
 
-unsigned num_maiusculas(const wchar_t *texto);
+int num_maiusculas(const wchar_t *texto);
 
 int main(void)
 {
@@ -17,7 +17,7 @@ int main(void)
 	}
 
 	// Lê uma linha da entrada. Ignora newlines.
-	while (wscanf(L" %l[^\n\r]s", input) == 1 &&
+	while (wscanf(L" %511l[^\n\r]s", input) == 1 &&
 	       wcscmp(input, L"FIM") != 0) {
 		printf("%u\n", num_maiusculas(input)); // Printa resposta.
 	}
@@ -25,14 +25,13 @@ int main(void)
 	return 0;
 }
 
-unsigned num_maiusculas(const wchar_t *texto)
+int num_maiusculas(const wchar_t *texto)
 {
-	unsigned count = 0; // Valor de retorno.
+	int count = 0; // Valor de retorno.
 
-	// Usamos `size_t` pois o compilador reclama com `int`.
-	for (size_t i = 0; texto[i] != L'\0'; ++i)
+	for (int i = 0; texto[i] != L'\0'; ++i)
 		// Verifica se é ASCII e maiúscula.
-		if (texto[i] >= 'A' && texto[i] <= 'Z')
+		if (texto[i] >= L'A' && texto[i] <= L'Z')
 			++count;
 
 	return count;
