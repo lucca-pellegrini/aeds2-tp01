@@ -1,6 +1,7 @@
 #include <locale.h>
 #include <stdio.h>
 #include <wchar.h>
+#include <wctype.h>
 
 #define TAM_BUF 256
 
@@ -31,7 +32,7 @@ int num_maiusculas(const wchar_t *texto)
 
 	for (int i = 0; texto[i] != L'\0'; ++i)
 		// Verifica se é ASCII e maiúscula.
-		if (texto[i] >= L'A' && texto[i] <= L'Z')
+		if (iswupper(texto[i]))
 			++count;
 
 	return count;
