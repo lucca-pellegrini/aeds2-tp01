@@ -3,9 +3,8 @@
 #include <wchar.h>
 #include <wctype.h>
 
-#define TAM_BUF (1 << 9) // Tamanho do buffer fixo de texto (512 caracteres).
+#define TAM_BUF 256
 
-// Usamos `size_t` pois o compilador reclama se usarmos `int`.
 unsigned num_maiusculas(const wchar_t *texto, size_t tam);
 
 int main(void)
@@ -13,14 +12,15 @@ int main(void)
 	wchar_t input[TAM_BUF]; // Buffer fixo de texto para a entrada.
 
 	// Ajusta o locale do programa para português em UTF-8 (somente Linux).
-	setlocale(LC_ALL, "C.UTF-8");
+	if (!setlocale(LC_ALL, "C.UTF-8")) {
+		fprintf(stderr, "Erro ao configurar locale.\n");
+		return 1;
+	}
 
 	// Lê uma linha da entrada. Ignora newlines.
-	wscanf(L"%l[^\n\r]s", input);
-
-	while (wcscmp(input, L"FIM") != 0) {
+	while (scanf(" %255l[^\n\r]s", input) != EOF &&
+	       wcscmp(input, L"FIM") != 0) {
 		printf("%u\n", num_maiusculas(input, wcslen(input)));
-		wscanf(L" %l[^\n\r]s", input); // Lê a próxima linha.
 	}
 
 	return 0;
