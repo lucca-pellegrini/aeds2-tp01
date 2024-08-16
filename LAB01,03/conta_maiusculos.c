@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <wchar.h>
 
-#define TAM_BUF (1 << 9) // Tamanho do buffer fixo de texto (512 caracteres).
+#define TAM_BUF 256
 
 int num_maiusculas(const wchar_t *texto);
 
@@ -17,7 +17,7 @@ int main(void)
 	}
 
 	// Lê uma linha da entrada. Ignora newlines.
-	while (wscanf(L" %511l[^\n\r]s", input) == 1 &&
+	while (scanf(" %255l[^\n\r]s", input) != EOF &&
 	       wcscmp(input, L"FIM") != 0) {
 		printf("%u\n", num_maiusculas(input)); // Printa resposta.
 	}
