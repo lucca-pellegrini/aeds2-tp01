@@ -1,38 +1,30 @@
-#include <locale.h>
+#include <ctype.h>
 #include <stdio.h>
-#include <wchar.h>
-#include <wctype.h>
+#include <string.h>
 
-#define TAM_BUF 256
+#define TAM_BUF (1 << 10)
 
-int num_maiusculas(const wchar_t *texto);
+int num_maiusculas(const char *texto);
 
 int main(void)
 {
-	wchar_t input[TAM_BUF]; // Buffer fixo de texto para a entrada.
+	char input[TAM_BUF]; // Buffer fixo de texto para a entrada.
 
-	// Ajusta o locale do programa para português em UTF-8 (somente Linux).
-	if (!setlocale(LC_ALL, "C.UTF-8")) {
-		fprintf(stderr, "Erro ao configurar locale.\n");
-		return 1;
-	}
-
-	// Lê uma linha da entrada. Ignora newlines.
-	while (scanf(" %255l[^\n\r]s", input) != EOF &&
-	       wcscmp(input, L"FIM") != 0) {
+	// Lê uma linha da entrada até achar “FIM”. Ignora newlines.
+	while (scanf(" %1023[^\n\r]s", input) != EOF &&
+	       strcmp(input, "FIM") != 0) {
 		printf("%u\n", num_maiusculas(input)); // Printa resposta.
 	}
 
 	return 0;
 }
 
-int num_maiusculas(const wchar_t *texto)
+int num_maiusculas(const char *texto)
 {
 	int count = 0; // Valor de retorno.
 
-	for (int i = 0; texto[i] != L'\0'; ++i)
-		// Verifica se é ASCII e maiúscula.
-		if (iswupper(texto[i]))
+	for (int i = 0; texto[i] != '\0'; ++i)
+		if (isupper(texto[i])) // Verifica se é maiúscula.
 			++count;
 
 	return count;
