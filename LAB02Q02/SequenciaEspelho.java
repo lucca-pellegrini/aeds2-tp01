@@ -19,6 +19,9 @@ public class SequenciaEspelho {
         for (int i = a; i <= b; ++i)
             res.append(Integer.toString(i));
 
-        return res.append(new StringBuilder(res).reverse()).toString();
+        for (int i = res.length() - 1; i >= 0; --i)
+            res.append(res.charAt(i));
+
+        return res.toString();
     }
 }
