@@ -9,7 +9,7 @@ void combina(char *const input, char *output);
 int main(void)
 {
 	char *res = NULL; // String dinamicamente alocada de resultado.
-	char *texto = NULL; // String dinamicamente alocada de entrada e saída.
+	char *texto = NULL; // String dinamicamente alocada de entrada.
 	size_t cap = 0; // Capacidade da string de entrada.
 
 	// Aloca memória e lê uma linha da entrada.
