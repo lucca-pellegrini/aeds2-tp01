@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void combina(char *const input, char *output);
+void combina(char *restrict const input, char *restrict output);
 
 int main(void)
 {
@@ -28,11 +28,11 @@ int main(void)
 
 /* É proveitoso ler a documentação de strtok() para compreender como a string
  * de input é dividida: <https://man.archlinux.org/man/strtok.3>. */
-void combina(char *const input, char *output)
+void combina(char *restrict const input, char *restrict output)
 {
 	int tam1, tam2, tam_max; // Tamanhos das substrings de entrada.
-	char *str1 = strtok(input, " \r\n"); // Substring no início da input.
-	char *str2 = strtok(NULL, " \r\n"); // Substring após o espaço.
+	char *restrict str1 = strtok(input, " \r\n"); // Primeira substring.
+	char *restrict str2 = strtok(NULL, " \r\n"); // Substring após espaço.
 
 	// Verificação de erros.
 	if (str1 == NULL || str2 == NULL || str1 == str2) {
