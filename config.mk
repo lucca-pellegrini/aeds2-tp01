@@ -8,7 +8,6 @@ OUTPUT := pub.out
 TEST   := teste.out
 
 # Compilador de C e seus parâmetros.
-CC      := clang
 CFLAGS  := -Werror -Wall -Wextra -pedantic -O3 -g --debug --std=c99
 LDFLAGS := -lm
 
