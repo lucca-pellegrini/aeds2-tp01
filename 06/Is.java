@@ -1,11 +1,13 @@
 import java.util.Scanner;
 
-public class Is {
+public class Is
+{
     // Strings globais com os conjuntos de caracteres de interesse.
     public static final String CONSOANTES = "bcdfghjklmnpqrstvwxyz";
     public static final String VOGAIS = "aeiou";
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
 
@@ -31,7 +33,8 @@ public class Is {
 
     // Método auxiliar. Retorna true somente se todos os caracteres de `texto`
     // se encontram na string `conjunto`.
-    public static boolean isInteiroNoConjunto(String texto, String conjunto) {
+    public static boolean isInteiroNoConjunto(String texto, String conjunto)
+    {
         boolean res = true; // Valor de retorno.
 
         // Itera sobre cada caractere. Se não estiver em `conjunto`, termina o
@@ -46,16 +49,19 @@ public class Is {
         return res;
     }
 
-    public static boolean isSomenteVogais(String texto) {
+    public static boolean isSomenteVogais(String texto)
+    {
         return isInteiroNoConjunto(texto, VOGAIS);
     }
 
-    public static boolean isSomenteConsoantes(String texto) {
+    public static boolean isSomenteConsoantes(String texto)
+    {
         return isInteiroNoConjunto(texto, CONSOANTES);
     }
 
     // Retorna true somente se `texto` é um número inteiro.
-    public static boolean isNumeroInteiro(String texto) {
+    public static boolean isNumeroInteiro(String texto)
+    {
         boolean res = true;
 
         // Tenta ler `texto` como objeto Inteiro. Se não conseguir por conta de
@@ -70,7 +76,8 @@ public class Is {
     }
 
     // Retorna true somente se `texto` é um número real.
-    public static boolean isNumeroReal(String texto) {
+    public static boolean isNumeroReal(String texto)
+    {
         boolean res = true;
 
         // Tenta ler `texto` como objeto Double. Se não conseguir por conta de
@@ -86,7 +93,8 @@ public class Is {
     }
 
     // Para cada boolean em `resultados`, printa "SIM" ou "NAO", em uma linha.
-    public static void printResultados(boolean[] resultados) {
+    public static void printResultados(boolean[] resultados)
+    {
         // Separador. Começa vazio, mas será um espaço após o primeiro SIM/NAO.
         String sep = "";
 

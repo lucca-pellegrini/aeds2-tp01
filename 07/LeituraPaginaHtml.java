@@ -10,13 +10,15 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LeituraPaginaHtml {
+public class LeituraPaginaHtml
+{
     public static final String VOGAIS = "aeiouáéíóúàèìòùãõâêîôû";
     public static final String CONSOANTES = "bcdfghjklmnpqrstvwxyz";
 
     // É necessário explicitar os `throws` porque se não o compilador reclama.
     public static void main(String[] args)
-            throws URISyntaxException, IOException {
+        throws URISyntaxException, IOException
+    {
         Scanner sc = new Scanner(System.in);
         String nome = sc.nextLine();
 
@@ -37,12 +39,13 @@ public class LeituraPaginaHtml {
     }
 
     public static String baixaPagina(String input)
-            throws URISyntaxException, IOException {
+        throws URISyntaxException, IOException
+    {
         URL url = new URI(input).toURL(); // Instancia um objeto URL.
 
         // Instancia um objeto para ler a resposta.
-        BufferedReader br = new BufferedReader(
-                new InputStreamReader(url.openStream()));
+        BufferedReader br =
+            new BufferedReader(new InputStreamReader(url.openStream()));
 
         StringBuilder resposta = new StringBuilder();
         String linha;
@@ -54,7 +57,8 @@ public class LeituraPaginaHtml {
         return resposta.toString();
     }
 
-    public static Map<String, Integer> conta(String html) {
+    public static Map<String, Integer> conta(String html)
+    {
         // Contadores locais.
         int consoantes = 0, breaks = 0, tabelas = 0;
 
@@ -94,7 +98,8 @@ public class LeituraPaginaHtml {
         return countMap;
     }
 
-    public static String resultStr(Map<String, Integer> map, String nome) {
+    public static String resultStr(Map<String, Integer> map, String nome)
+    {
         // Buffer contendo os caracteres que formarão a String.
         StringBuilder buf = new StringBuilder();
 

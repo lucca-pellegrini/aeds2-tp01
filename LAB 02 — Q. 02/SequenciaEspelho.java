@@ -1,7 +1,9 @@
 import java.util.Scanner;
 
-public class SequenciaEspelho {
-    public static void main(String[] args) {
+public class SequenciaEspelho
+{
+    public static void main(String[] args)
+    {
         Scanner sc = new Scanner(System.in);
 
         while (sc.hasNextInt()) {
@@ -13,7 +15,8 @@ public class SequenciaEspelho {
         sc.close();
     }
 
-    public static String sequencia(int a, int b) {
+    public static String sequencia(int a, int b)
+    {
         StringBuilder res = new StringBuilder();
 
         for (int i = a; i <= b; ++i)

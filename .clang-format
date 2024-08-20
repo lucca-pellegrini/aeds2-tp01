@@ -686,3 +686,29 @@ SpacesInSquareBrackets: false
 Standard: Cpp03
 TabWidth: 8
 UseTab: Always
+
+---
+Language: Java
+BraceWrapping:
+  AfterClass            : true
+  AfterControlStatement : false
+  AfterEnum             : false
+  AfterExternBlock      : false
+  AfterFunction         : true
+  AfterNamespace        : true
+  AfterObjCDeclaration  : false
+  AfterStruct           : false
+  AfterUnion            : false
+  BeforeCatch           : false
+  BeforeElse            : false
+  IndentBraces          : false
+  SplitEmptyFunction    : false
+  SplitEmptyNamespace   : false
+  SplitEmptyRecord      : false
+BreakBeforeBraces: Custom
+ColumnLimit: 80
+TabWidth: 4
+UseTab: Never
+IndentWidth: 4
+ConstructorInitializerIndentWidth: 4
+ContinuationIndentWidth: 4

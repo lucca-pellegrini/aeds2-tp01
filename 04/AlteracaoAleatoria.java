@@ -1,12 +1,14 @@
 import java.util.Random;
 import java.util.Scanner;
 
-public class AlteracaoAleatoria {
+public class AlteracaoAleatoria
+{
     // Referência constante ao objeto Random para evitar ter que passá-lo como
     // parâmetro a cada método.
     public static final Random GERADOR = new Random();
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         Scanner sc = new Scanner(System.in);
         String input;
 
@@ -21,7 +23,8 @@ public class AlteracaoAleatoria {
         sc.close();
     }
 
-    public static String codificar(String texto) {
+    public static String codificar(String texto)
+    {
         String out = new String();
         char orig = charAleatorio(); // Caractere que mudaremos.
         char alvo = charAleatorio(); // Caractere que o substituirá.
@@ -36,7 +39,8 @@ public class AlteracaoAleatoria {
     }
 
     // Método copiado verbatim do enunciado.
-    public static char charAleatorio() {
-        return (char) ('a' + (Math.abs(GERADOR.nextInt()) % 26));
+    public static char charAleatorio()
+    {
+        return (char)('a' + (Math.abs(GERADOR.nextInt()) % 26));
     }
 }

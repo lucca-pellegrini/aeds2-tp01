@@ -1,7 +1,9 @@
 import java.util.Scanner;
 
-public class ContaMaiusculos {
-    public static void main(String[] args) {
+public class ContaMaiusculos
+{
+    public static void main(String[] args)
+    {
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
 
@@ -13,7 +15,8 @@ public class ContaMaiusculos {
         sc.close();
     }
 
-    public static int contaMaiusculos(String texto) {
+    public static int contaMaiusculos(String texto)
+    {
         int count = 0;
 
         for (int i = 0; i < texto.length(); ++i)

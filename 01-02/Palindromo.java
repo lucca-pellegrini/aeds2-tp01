@@ -1,7 +1,9 @@
 import java.util.Scanner;
 
-public class Palindromo {
-    public static void main(String[] args) {
+public class Palindromo
+{
+    public static void main(String[] args)
+    {
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
 
@@ -13,7 +15,8 @@ public class Palindromo {
         sc.close();
     }
 
-    public static boolean isPalindromo(String str) {
+    public static boolean isPalindromo(String str)
+    {
         int esq = 0;
         int dir = str.length() - 1;
         boolean ret = true;

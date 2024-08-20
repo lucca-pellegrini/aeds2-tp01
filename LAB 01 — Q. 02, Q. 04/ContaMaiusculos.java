@@ -1,7 +1,9 @@
 import java.util.Scanner;
 
-public class ContaMaiusculos {
-    public static void main(String[] args) {
+public class ContaMaiusculos
+{
+    public static void main(String[] args)
+    {
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
 
@@ -14,7 +16,8 @@ public class ContaMaiusculos {
     }
 
     // Recebe o índice (inicialmente 0) e o tamanho (inicialmente .length())
-    public static int contaMaiusculos(String texto, int i, int tam) {
+    public static int contaMaiusculos(String texto, int i, int tam)
+    {
         int ret; // Valor de retorno.
 
         if (tam == 0) {
@@ -31,7 +34,8 @@ public class ContaMaiusculos {
     // Fazemos overloading para poder passar uma String sem o tamanho em main.
     // Não usamos String.substring() porque a criação recursiva de novas
     // Strings será menos eficiente..
-    public static int contaMaiusculos(String texto) {
+    public static int contaMaiusculos(String texto)
+    {
         return contaMaiusculos(texto, 0, texto.length());
     }
 }
