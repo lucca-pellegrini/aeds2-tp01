@@ -48,8 +48,10 @@ unsigned strlen2(char *str) // Pois não se usa strlen() nos TPs.
 int strcmp2(char *str, char *cmp)
 {
 	int ret = 0;
+	int min_len = (strlen2(str) > strlen2(cmp)) ? strlen2(cmp) :
+						      strlen2(str);
 
-	for (int i = 0; str[i] && cmp[i]; ++i)
+	for (int i = min_len - 1; i > 0; --i)
 		if (str[i] != cmp[i])
 			ret = str[i] - cmp[i];
 

@@ -5,6 +5,7 @@
 #define TAM_BUF (1 << 10)
 
 int num_maiusculas(const char *texto);
+unsigned strlen2(char *str);
 int strcmp2(char *str, char *cmp);
 
 int main(void)
@@ -31,11 +32,21 @@ int num_maiusculas(const char *texto)
 	return count;
 }
 
+unsigned strlen2(char *str) // Pois não se usa strlen() nos TPs.
+{
+	unsigned count;
+	for (count = 0; str[count] != '\0'; ++count)
+		; // Loop vazio.
+	return count;
+}
+
 int strcmp2(char *str, char *cmp)
 {
 	int ret = 0;
+	int min_len = (strlen2(str) > strlen2(cmp)) ? strlen2(cmp) :
+						      strlen2(str);
 
-	for (int i = 0; str[i] && cmp[i]; ++i)
+	for (int i = min_len - 1; i > 0; --i)
 		if (str[i] != cmp[i])
 			ret = str[i] - cmp[i];
 
