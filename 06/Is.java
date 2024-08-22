@@ -5,6 +5,7 @@ public class Is
     // Strings globais com os conjuntos de caracteres de interesse.
     public static final String CONSOANTES = "bcdfghjklmnpqrstvwxyz";
     public static final String VOGAIS = "aeiou";
+    public static final String DIGITOS = "0123456789";
 
     public static void main(String[] args)
     {
@@ -62,31 +63,27 @@ public class Is
     // Retorna true somente se `texto` é um número inteiro.
     public static boolean isNumeroInteiro(String texto)
     {
-        boolean res = true;
-
-        // Tenta ler `texto` como objeto Inteiro. Se não conseguir por conta de
-        // formatação numérica errada, não é inteiro.
-        try {
-            Integer.parseInt(texto);
-        } catch (NumberFormatException e) {
-            res = false;
-        }
-
-        return res;
+        return isInteiroNoConjunto(texto, DIGITOS);
     }
 
     // Retorna true somente se `texto` é um número real.
     public static boolean isNumeroReal(String texto)
     {
         boolean res = true;
+        boolean found_sep = false;
 
-        // Tenta ler `texto` como objeto Double. Se não conseguir por conta de
-        // formatação numérica errada, não é número real. Mas é necessário,
-        // primeiro, substituir quaisquer vírgulas no texto por pontos.
-        try {
-            Double.parseDouble(texto.replaceAll(",", "."));
-        } catch (NumberFormatException e) {
-            res = false;
+        for (int i = 0; i < texto.length(); ++i) {
+            if (DIGITOS.indexOf(texto.charAt(i)) == -1) {
+                if (texto.charAt(i) == '.' || texto.charAt(i) == ',') {
+                    if (found_sep) { // Vê se já encontramos separador decimal.
+                        res = false;
+                    } else {
+                        found_sep = true;
+                    }
+                } else {
+                    res = false;
+                }
+            }
         }
 
         return res;
