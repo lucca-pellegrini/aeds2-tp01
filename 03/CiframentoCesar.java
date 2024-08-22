@@ -9,7 +9,7 @@ public class CiframentoCesar
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
 
-        while (!input.equals("FIM")) {
+        while (strcmp(input, "FIM") != 0) {
             System.out.println(cifra(input));
             input = sc.nextLine();
         }
@@ -28,5 +28,18 @@ public class CiframentoCesar
         }
 
         return cifra;
+    }
+
+    public static int strcmp(String str, String cmp)
+    {
+        int ret = 0;
+        int min_len = (str.length() > cmp.length()) ? cmp.length() :
+                                                      str.length();
+
+        for (int i = min_len - 1; i >= 0; --i)
+            if (str.charAt(i) != cmp.charAt(i))
+                ret = str.charAt(i) - cmp.charAt(i);
+
+        return ret;
     }
 }

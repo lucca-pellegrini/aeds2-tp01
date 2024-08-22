@@ -15,7 +15,7 @@ public class AlteracaoAleatoria
         GERADOR.setSeed(4);
 
         input = sc.nextLine();
-        while (!input.equals("FIM")) {
+        while (strcmp(input, "FIM") != 0) {
             System.out.println(codificar(input));
             input = sc.nextLine();
         }
@@ -42,5 +42,18 @@ public class AlteracaoAleatoria
     public static char charAleatorio()
     {
         return (char)('a' + (Math.abs(GERADOR.nextInt()) % 26));
+    }
+
+    public static int strcmp(String str, String cmp)
+    {
+        int ret = 0;
+        int min_len = (str.length() > cmp.length()) ? cmp.length() :
+                                                      str.length();
+
+        for (int i = min_len - 1; i >= 0; --i)
+            if (str.charAt(i) != cmp.charAt(i))
+                ret = str.charAt(i) - cmp.charAt(i);
+
+        return ret;
     }
 }

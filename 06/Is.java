@@ -11,7 +11,7 @@ public class Is
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
 
-        while (!input.equals("FIM")) {
+        while (strcmp(input, "FIM") != 0) {
             // Salvaremos os resultados de cada método num array de boolean.
             boolean[] resultados = new boolean[4];
 
@@ -105,5 +105,18 @@ public class Is
         }
 
         System.out.println(); // Termina a linha.
+    }
+
+    public static int strcmp(String str, String cmp)
+    {
+        int ret = 0;
+        int min_len = (str.length() > cmp.length()) ? cmp.length() :
+                                                      str.length();
+
+        for (int i = min_len - 1; i >= 0; --i)
+            if (str.charAt(i) != cmp.charAt(i))
+                ret = str.charAt(i) - cmp.charAt(i);
+
+        return ret;
     }
 }
