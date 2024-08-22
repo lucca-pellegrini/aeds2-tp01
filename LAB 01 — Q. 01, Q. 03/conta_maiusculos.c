@@ -5,6 +5,7 @@
 #define TAM_BUF (1 << 10)
 
 int num_maiusculas(const char *texto);
+int strcmp2(char *str, char *cmp);
 
 int main(void)
 {
@@ -12,7 +13,7 @@ int main(void)
 
 	// Lê uma linha da entrada até achar “FIM”. Ignora newlines.
 	while (scanf(" %1023[^\n\r]s", input) != EOF &&
-	       strcmp(input, "FIM") != 0) {
+	       strcmp2(input, "FIM") != 0) {
 		printf("%u\n", num_maiusculas(input)); // Printa resposta.
 	}
 
@@ -28,4 +29,15 @@ int num_maiusculas(const char *texto)
 			++count;
 
 	return count;
+}
+
+int strcmp2(char *str, char *cmp)
+{
+	int ret = 0;
+
+	for (int i = 0; str[i] && cmp[i]; ++i)
+		if (str[i] != cmp[i])
+			ret = str[i] - cmp[i];
+
+	return ret;
 }

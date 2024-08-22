@@ -6,6 +6,7 @@
 
 unsigned num_maiusculas(const char *texto, size_t tam);
 unsigned strlen2(char *str);
+int strcmp2(char *str, char *cmp);
 
 int main(void)
 {
@@ -13,7 +14,7 @@ int main(void)
 
 	// Lê uma linha da entrada até achar “FIM”. Ignora newlines.
 	while (scanf(" %1023[^\n\r]s", input) != EOF &&
-	       strcmp(input, "FIM") != 0) {
+	       strcmp2(input, "FIM") != 0) {
 		printf("%u\n", num_maiusculas(input, strlen2(input)));
 	}
 
@@ -42,4 +43,15 @@ unsigned strlen2(char *str) // Pois não se usa strlen() nos TPs.
 	for (count = 0; str[count] != '\0'; ++count)
 		; // Loop vazio.
 	return count;
+}
+
+int strcmp2(char *str, char *cmp)
+{
+	int ret = 0;
+
+	for (int i = 0; str[i] && cmp[i]; ++i)
+		if (str[i] != cmp[i])
+			ret = str[i] - cmp[i];
+
+	return ret;
 }
