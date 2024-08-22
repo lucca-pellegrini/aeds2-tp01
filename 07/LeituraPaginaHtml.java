@@ -47,14 +47,14 @@ public class LeituraPaginaHtml
         BufferedReader br =
             new BufferedReader(new InputStreamReader(url.openStream()));
 
-        StringBuilder resposta = new StringBuilder();
+        String resposta = new String();
         String linha;
 
         // Itera sobre a resposta no objeto, linha por linha, e apende à saída.
         while ((linha = br.readLine()) != null)
-            resposta.append(linha);
+            resposta += linha;
 
-        return resposta.toString();
+        return resposta;
     }
 
     public static Map<String, Integer> conta(String html)
@@ -67,11 +67,11 @@ public class LeituraPaginaHtml
 
         // Inicializa todos os itens na tabela como 0.
         for (int i = 0; i < VOGAIS.length(); ++i)
-            countMap.put(Character.toString(VOGAIS.charAt(i)), 0);
+            countMap.put("" + VOGAIS.charAt(i), 0);
 
         // Itera sobre o HTML caractere por caractere.
         for (int i = 0; i < html.length(); ++i) {
-            String c = Character.toString(html.charAt(i));
+            String c = "" + html.charAt(i);
 
             // Insere vogais na tabela hash.
             if (VOGAIS.contains(c))
@@ -101,18 +101,18 @@ public class LeituraPaginaHtml
     public static String resultStr(Map<String, Integer> map, String nome)
     {
         // Buffer contendo os caracteres que formarão a String.
-        StringBuilder buf = new StringBuilder();
+        String buf = new String();
 
         // Adiciona as vogais.
         for (char v : VOGAIS.toCharArray())
-            buf.append(v + "(" + map.get(Character.toString(v)) + ") ");
+            buf += v + "(" + map.get("" + v) + ") ";
 
         // Adiciona os outros contadores.
-        buf.append("consoante(" + map.get("consoante") + ") ");
-        buf.append("<br>(" + map.get("<br>") + ") ");
-        buf.append("<table>(" + map.get("<table>") + ") ");
-        buf.append(nome);
+        buf += "consoante(" + map.get("consoante") + ") ";
+        buf += "<br>(" + map.get("<br>") + ") ";
+        buf += "<table>(" + map.get("<table>") + ") ";
+        buf += nome;
 
-        return buf.toString();
+        return buf;
     }
 }
