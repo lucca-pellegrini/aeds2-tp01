@@ -32,8 +32,8 @@ public class Is
         sc.close();
     }
 
-    // Método auxiliar. Retorna true somente se todos o caractere em `c` se
-    // encontra na string `conjunto`.
+    // Método auxiliar. Retorna true somente se o caractere em `c` se encontra
+    // na string `conjunto`.
     public static boolean isInConjunto(char c, String conjunto)
     {
         boolean res = false;
