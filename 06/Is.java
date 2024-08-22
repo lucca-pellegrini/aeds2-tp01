@@ -32,6 +32,19 @@ public class Is
         sc.close();
     }
 
+    // Método auxiliar. Retorna true somente se todos o caractere em `c` se
+    // encontra na string `conjunto`.
+    public static boolean isInConjunto(char c, String conjunto)
+    {
+        boolean res = false;
+
+        for (int i = 0; i < conjunto.length(); ++i)
+            if (conjunto.charAt(i) == c)
+                res = true;
+
+        return res;
+    }
+
     // Método auxiliar. Retorna true somente se todos os caracteres de `texto`
     // se encontram na string `conjunto`.
     public static boolean isInteiroNoConjunto(String texto, String conjunto)
@@ -41,7 +54,7 @@ public class Is
         // Itera sobre cada caractere. Se não estiver em `conjunto`, termina o
         // loop com resultado `false`.
         for (int i = 0; i < texto.length(); ++i) {
-            if (conjunto.indexOf(texto.charAt(i)) == -1) {
+            if (!isInConjunto(texto.charAt(i), conjunto)) {
                 res = false;
                 i = texto.length();
             }
@@ -63,24 +76,39 @@ public class Is
     // Retorna true somente se `texto` é um número inteiro.
     public static boolean isNumeroInteiro(String texto)
     {
-        return isInteiroNoConjunto(texto, DIGITOS);
+        boolean res = true;
+
+        // Verifica se é o primeiro caractere, que pode ser sinal.
+        for (int i = 0; i < texto.length(); ++i) {
+            if (!isInConjunto(texto.charAt(i), DIGITOS) &&
+                (i != 0 ||
+                 (texto.charAt(i) != '-' && texto.charAt(i) != '+'))) {
+                res = false;
+            }
+        }
+
+        return res;
     }
 
     // Retorna true somente se `texto` é um número real.
     public static boolean isNumeroReal(String texto)
     {
         boolean res = true;
-        boolean found_sep = false;
+        boolean found_sep = false; // Se já encontramos separador decimal.
 
         for (int i = 0; i < texto.length(); ++i) {
-            if (DIGITOS.indexOf(texto.charAt(i)) == -1) {
+            if (!isInConjunto(texto.charAt(i), DIGITOS)) {
+                // Se não for dígito, verifica se é separador decimal.
                 if (texto.charAt(i) == '.' || texto.charAt(i) == ',') {
                     if (found_sep) { // Vê se já encontramos separador decimal.
                         res = false;
                     } else {
-                        found_sep = true;
+                        found_sep = true; // Atualiza a flag.
                     }
-                } else {
+
+                } else if (i != 0 ||
+                           (texto.charAt(i) != '-' && texto.charAt(i) != '+')) {
+                    // Verifica se é o primeiro caractere, que pode ser sinal.
                     res = false;
                 }
             }
