@@ -17,14 +17,16 @@ public class SequenciaEspelho
 
     public static String sequencia(int a, int b)
     {
-        StringBuilder res = new StringBuilder();
+        String res = new String();
 
+        // Itera sobre a sequência, adicionando os elementos à string.
         for (int i = a; i <= b; ++i)
-            res.append(Integer.toString(i));
+            res += i;
 
+        // Itera string ao contrário, inserindo os caracteres em ordem reversa.
         for (int i = res.length() - 1; i >= 0; --i)
-            res.append(res.charAt(i));
+            res += res.charAt(i);
 
-        return res.toString();
+        return res;
     }
 }
