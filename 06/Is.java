@@ -3,8 +3,9 @@ import java.util.Scanner;
 public class Is
 {
     // Strings globais com os conjuntos de caracteres de interesse.
-    public static final String CONSOANTES = "bcdfghjklmnpqrstvwxyz";
-    public static final String VOGAIS = "aeiou";
+    public static final String CONSOANTES =
+        "bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
+    public static final String VOGAIS = "aeiouAEIOU";
     public static final String DIGITOS = "0123456789";
 
     public static void main(String[] args)
@@ -15,8 +16,6 @@ public class Is
         while (strcmp(input, "FIM") != 0) {
             // Salvaremos os resultados de cada método num array de boolean.
             boolean[] resultados = new boolean[4];
-
-            input = input.toLowerCase(); // Converte a input para minúsculas.
 
             // Executa os métodos e salva no array.
             resultados[0] = isSomenteVogais(input);
