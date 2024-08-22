@@ -34,7 +34,7 @@ public class Is
 
     // Método auxiliar. Retorna true somente se o caractere em `c` se encontra
     // na string `conjunto`.
-    public static boolean isInConjunto(char c, String conjunto)
+    public static boolean isNoConjunto(char c, String conjunto)
     {
         boolean res = false;
 
@@ -47,14 +47,14 @@ public class Is
 
     // Método auxiliar. Retorna true somente se todos os caracteres de `texto`
     // se encontram na string `conjunto`.
-    public static boolean isInteiroNoConjunto(String texto, String conjunto)
+    public static boolean isAllNoConjunto(String texto, String conjunto)
     {
         boolean res = true; // Valor de retorno.
 
         // Itera sobre cada caractere. Se não estiver em `conjunto`, termina o
         // loop com resultado `false`.
         for (int i = 0; i < texto.length(); ++i) {
-            if (!isInConjunto(texto.charAt(i), conjunto)) {
+            if (!isNoConjunto(texto.charAt(i), conjunto)) {
                 res = false;
                 i = texto.length();
             }
@@ -65,12 +65,12 @@ public class Is
 
     public static boolean isSomenteVogais(String texto)
     {
-        return isInteiroNoConjunto(texto, VOGAIS);
+        return isAllNoConjunto(texto, VOGAIS);
     }
 
     public static boolean isSomenteConsoantes(String texto)
     {
-        return isInteiroNoConjunto(texto, CONSOANTES);
+        return isAllNoConjunto(texto, CONSOANTES);
     }
 
     // Retorna true somente se `texto` é um número inteiro.
@@ -80,7 +80,7 @@ public class Is
 
         // Verifica se é o primeiro caractere, que pode ser sinal.
         for (int i = 0; i < texto.length(); ++i) {
-            if (!isInConjunto(texto.charAt(i), DIGITOS) &&
+            if (!isNoConjunto(texto.charAt(i), DIGITOS) &&
                 (i != 0 ||
                  (texto.charAt(i) != '-' && texto.charAt(i) != '+'))) {
                 res = false;
@@ -97,7 +97,7 @@ public class Is
         boolean found_sep = false; // Se já encontramos separador decimal.
 
         for (int i = 0; i < texto.length(); ++i) {
-            if (!isInConjunto(texto.charAt(i), DIGITOS)) {
+            if (!isNoConjunto(texto.charAt(i), DIGITOS)) {
                 // Se não for dígito, verifica se é separador decimal.
                 if (texto.charAt(i) == '.' || texto.charAt(i) == ',') {
                     if (found_sep) { // Vê se já encontramos separador decimal.
