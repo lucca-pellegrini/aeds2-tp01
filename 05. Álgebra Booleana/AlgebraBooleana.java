@@ -151,7 +151,7 @@ public class AlgebraBooleana
             out += op[ind--];
         }
 
-        return out;
+        return out.toString(); // Converte vetor de char para String.
     }
 
     public static boolean avaliaRPN(String fila)
