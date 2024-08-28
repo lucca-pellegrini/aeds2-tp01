@@ -1,28 +1,31 @@
 #include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <wchar.h>
 
 #define TAM_BUF (1 << 9) // Tamanho do buffer fixo de texto (512 caracteres).
 
 bool is_palindromo(wchar_t *str, int esq, int dir);
 unsigned wcslen2(wchar_t *str);
-int wcscmp2(const wchar_t *str, const wchar_t *cmp);
+int strcmp2(const char *str, const char *cmp);
 
 int main(void)
 {
-	wchar_t input[TAM_BUF]; // Buffer fixo de texto para a entrada.
+	char input[TAM_BUF]; // Buffer fixo de texto para a entrada.
+	wchar_t winput[TAM_BUF]; // Buffer fixo para a string convertida.
 
-	// Ajusta o locale do programa para português em UTF-8 (somente Linux).
+	// Ajusta o locale do programa para UTF-8 (somente Linux).
 	setlocale(LC_ALL, "C.UTF-8");
 
 	// Lê uma linha da entrada. Ignora newlines.
-	wscanf(L"%l[^\n\r]s", input);
+	scanf(" %[^\n\r]s", input);
 
-	while (wcscmp2(input, L"FIM") != 0) {
-		puts(is_palindromo(input, 0, wcslen2(input) - 1) ? "SIM" :
-								   "NAO");
-		wscanf(L" %l[^\n\r]s", input); // Lê a próxima linha.
+	while (strcmp2(input, "FIM") != 0) {
+		mbstowcs(winput, input, TAM_BUF); // Converte a string.
+		puts(is_palindromo(winput, 0, wcslen2(winput) - 1) ? "SIM" :
+								     "NAO");
+		scanf(" %[^\n\r]s", input); // Lê a próxima linha.
 	}
 
 	return 0;
@@ -50,11 +53,11 @@ unsigned wcslen2(wchar_t *str) // Pois não se usa wcslen() nos TPs.
 	return count;
 }
 
-int wcscmp2(const wchar_t *str, const wchar_t *cmp)
+int strcmp2(const char *str, const char *cmp)
 {
 	while (*str && (*str == *cmp)) {
 		str++;
 		cmp++;
 	}
-	return *(const unsigned int *)str - *(const unsigned int *)cmp;
+	return *str - *cmp;
 }
