@@ -126,8 +126,7 @@ public class AlgebraBooleana
             case ')': // ...fechamento de parênteses:
                 // enquanto o operador no topo da stack não for `(`:
                 while (op[ind] != '(') {
-                    assert ind >= 0
-                        : "Erro de parênteses!";
+                    assert ind >= 0 : "Erro de parênteses!";
                     out += op[ind--]; // insere-o daí à fila de saída.
                 }
 
