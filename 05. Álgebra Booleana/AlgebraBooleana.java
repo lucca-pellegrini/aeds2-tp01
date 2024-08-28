@@ -101,8 +101,9 @@ public class AlgebraBooleana
     public static String shuntingYard(String expr)
     {
         // Não consegui descobrir como implementar essa Stack como um array.
-        Stack<Character> op = new Stack<>(); // Stack de operadores.
         String out = new String(); // Fila de output.
+        char[] op = new char[expr.length()]; // Stack de operadores.
+        int ind = -1; // Índice da stack.
 
         for (int i = 0; i < expr.length(); ++i) { // Enquanto houver tokens...
             char tok = expr.charAt(i); // ...leia um token.
@@ -112,32 +113,32 @@ public class AlgebraBooleana
                 out += tok; // coloca-o na fila de saída.
                 break;
             case '^', 'v', '~': // ...uma função:
-                op.add(tok); // apende-o à stack de operadores.
+                op[++ind] = tok; // apende-o à stack de operadores.
                 break;
             case ',': // ...um separador de parâmetros:
                 // enquanto o operador no topo da stack não for `(`:
-                while (op.peek() != '(')
-                    out += op.pop(); // insere-o daí à fila de saída.
+                while (op[ind] != '(')
+                    out += op[ind--]; // insere-o daí à fila de saída.
                 break;
             case '(': // ...abertura de parênteses:
-                op.add(tok); // apende-o à stack de operadores.
+                op[++ind] = tok; // apende-o à stack de operadores.
                 break;
             case ')': // ...fechamento de parênteses:
                 // enquanto o operador no topo da stack não for `(`:
-                while (op.peek() != '(') {
-                    assert !op.isEmpty()
+                while (op[ind] != '(') {
+                    assert ind >= 0
                         : "Erro de parênteses!";
-                    out += op.pop(); // insere-o daí à fila de saída.
+                    out += op[ind--]; // insere-o daí à fila de saída.
                 }
 
-                assert op.peek() == '(';
-                op.pop(); // Descarta o `(` no topo da stack.
+                assert op[ind] == '(';
+                --ind; // Descarta o `(` no topo da stack.
 
                 // Se há uma função no topo da stack:
-                switch (op.peek()) {
+                switch (op[ind]) {
                 case '^', 'v', '~':
                     // insere-a daí à fila de saída.
-                    out += op.pop();
+                    out += op[ind--];
                     break;
                 }
                 break;
@@ -145,9 +146,9 @@ public class AlgebraBooleana
         }
 
         // Terminados os tokens, apende os itens restantes na stack à fila.
-        while (!op.isEmpty()) {
-            assert op.peek() != '(' : "Erro de parênteses!";
-            out += op.pop();
+        while (ind >= 0) {
+            assert op[ind] != '(' : "Erro de parênteses!";
+            out += op[ind--];
         }
 
         return out;
