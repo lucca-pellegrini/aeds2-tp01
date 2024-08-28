@@ -7,7 +7,7 @@
 
 bool is_palindromo(wchar_t *str, int esq, int dir);
 unsigned wcslen2(wchar_t *str);
-int wcscmp2(wchar_t *str, wchar_t *cmp);
+int wcscmp2(const wchar_t *str, const wchar_t *cmp);
 
 int main(void)
 {
@@ -50,15 +50,11 @@ unsigned wcslen2(wchar_t *str) // Pois não se usa wcslen() nos TPs.
 	return count;
 }
 
-int wcscmp2(wchar_t *str, wchar_t *cmp)
+int wcscmp2(const wchar_t *str, const wchar_t *cmp)
 {
-	int ret = 0;
-	int min_len = (wcslen2(str) > wcslen2(cmp)) ? wcslen2(cmp) :
-						      wcslen2(str);
-
-	for (int i = min_len - 1; i > 0; --i)
-		if (str[i] != cmp[i])
-			ret = str[i] - cmp[i];
-
-	return ret;
+	while (*str && (*str == *cmp)) {
+		str++;
+		cmp++;
+	}
+	return *(const unsigned int *)str - *(const unsigned int *)cmp;
 }
