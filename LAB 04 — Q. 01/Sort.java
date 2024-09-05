@@ -2,9 +2,9 @@ import java.util.Scanner;
 
 public class Sort
 {
-    public static void main(String[] args)
+    public static void main(final String[] args)
     {
-        Scanner sc = new Scanner(System.in);
+        final Scanner sc = new Scanner(System.in);
         int[] vec; // Referência ao vetor.
         int num, mod; // Tamanho do vetor e módulo para comparação.
 
@@ -21,7 +21,7 @@ public class Sort
 
             ordenaInsercao(vec, mod);
 
-            for (int val : vec) // Mostra os resultados.
+            for (final int val : vec) // Mostra os resultados.
                 System.out.println(val);
         }
 
@@ -35,7 +35,7 @@ public class Sort
     {
         // Itera do segundo ao último item.
         for (int i = 1; i < vec.length; ++i) {
-            int n = vec[i]; // Salva o valor na posição atual.
+            final int n = vec[i]; // Salva o valor na posição atual.
             int j;
 
             for (j = i - 1; j >= 0 && compara(vec[j], n, mod); --j)
@@ -45,13 +45,13 @@ public class Sort
         }
     }
 
-    public static boolean compara(int a, int b, int mod)
+    public static boolean compara(final int a, final int b, final int mod)
     {
         boolean ret;
-        int mod_a = a % mod;
-        int mod_b = b % mod;
-        boolean par_a = (a % 2) == 0;
-        boolean par_b = (b % 2) == 0;
+        final int mod_a = a % mod;
+        final int mod_b = b % mod;
+        final boolean par_a = (a % 2) == 0;
+        final boolean par_b = (b % 2) == 0;
 
         // Realiza as verificações dadas pelo enunciado.
         // Ordena segundo os módulos, se forem diferentes entre os elementos.
