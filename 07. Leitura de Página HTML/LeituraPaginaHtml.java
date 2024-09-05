@@ -78,7 +78,7 @@ public class LeituraPaginaHtml
                 countMap.put(c, countMap.get(c) + 1);
 
             // Conta consoantes.
-            if (CONSOANTES.contains(c))
+            else if (CONSOANTES.contains(c))
                 ++consoantes;
         }
 
