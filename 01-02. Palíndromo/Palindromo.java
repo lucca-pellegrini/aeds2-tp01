@@ -30,8 +30,7 @@ public class Palindromo
     public static int strcmp(String str, String cmp)
     {
         int ret = 0;
-        int min_len = (str.length() > cmp.length()) ? cmp.length() :
-                                                      str.length();
+        int min_len = (str.length() > cmp.length()) ? cmp.length() : str.length();
 
         for (int i = min_len - 1; i >= 0; --i)
             if (str.charAt(i) != cmp.charAt(i))

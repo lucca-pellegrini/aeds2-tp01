@@ -3,8 +3,7 @@ import java.util.Scanner;
 public class Is
 {
     // Strings globais com os conjuntos de caracteres de interesse.
-    public static final String CONSOANTES =
-        "bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
+    public static final String CONSOANTES = "bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     public static final String VOGAIS = "aeiouAEIOU";
     public static final String DIGITOS = "0123456789";
 
@@ -106,8 +105,7 @@ public class Is
                     found_sep = true; // Atualiza a flag.
                     res = isNumeroReal(texto, i + 1, found_sep);
                 }
-            } else if (i != 0 ||
-                       (texto.charAt(i) != '-' && texto.charAt(i) != '+')) {
+            } else if (i != 0 || (texto.charAt(i) != '-' && texto.charAt(i) != '+')) {
                 // Verifica se é o primeiro caractere, que pode ser sinal.
                 res = false;
             } else {
@@ -153,8 +151,7 @@ public class Is
     public static int strcmp(String str, String cmp)
     {
         int ret = 0;
-        int min_len = (str.length() > cmp.length()) ? cmp.length() :
-                                                      str.length();
+        int min_len = (str.length() > cmp.length()) ? cmp.length() : str.length();
 
         for (int i = min_len - 1; i >= 0; --i)
             if (str.charAt(i) != cmp.charAt(i))

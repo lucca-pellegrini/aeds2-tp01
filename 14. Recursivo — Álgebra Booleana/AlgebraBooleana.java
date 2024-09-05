@@ -93,8 +93,8 @@ public class AlgebraBooleana
         return shuntingYard(expr, 0, new String(), new char[expr.length()], -1);
     }
 
-    private static String shuntingYard(String expr, int index, String out,
-                                       char[] op, int ind)
+    private static String shuntingYard(String expr, int index, String out, char[] op,
+                                       int ind)
     {
         if (index >= expr.length()) {
             while (ind >= 0) {
@@ -127,8 +127,7 @@ public class AlgebraBooleana
             }
             assert op[ind] == '(';
             --ind;
-            if (ind >= 0 &&
-                (op[ind] == '^' || op[ind] == 'v' || op[ind] == '~'))
+            if (ind >= 0 && (op[ind] == '^' || op[ind] == 'v' || op[ind] == '~'))
                 out += op[ind--];
             break;
         }
@@ -141,8 +140,7 @@ public class AlgebraBooleana
         return avaliaRPN(fila, 0, new boolean[fila.length()], -1);
     }
 
-    private static boolean avaliaRPN(String fila, int index, boolean[] ops,
-                                     int ind)
+    private static boolean avaliaRPN(String fila, int index, boolean[] ops, int ind)
     {
         if (index >= fila.length())
             return ops[0];
