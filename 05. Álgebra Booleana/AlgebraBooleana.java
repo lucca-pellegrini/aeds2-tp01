@@ -16,25 +16,25 @@ public class AlgebraBooleana
             // Lê a expressão booleanas.
             String expr = sc.nextLine();
 
-            // for (int i : entradas)
-            //     System.out.print(i + " ");
-            // System.out.println();
-            // System.out.println(expr);
+            /* for (int i : entradas)
+                System.err.print(i + " ");
+            System.err.println();
+            System.err.println(expr); */
 
             expr = tokeniza(expr); // Preprocessa a expressão.
             expr = insere(expr, entradas); // Insere as entradas.
 
-            // System.out.println(expr);
+            // System.err.println(expr);
 
             String fila = shuntingYard(expr); // Constrói a fila, como em RPN.
 
+            // System.err.println(fila);
+
             boolean res = avaliaRPN(fila); // Avalia a fila RPN booleana.
 
-            // System.out.println(fila);
+            // System.err.println(fila + '\n');
 
             System.out.println(res ? 1 : 0);
-
-            // System.out.println();
 
             n = sc.nextInt(); // Lê o próximo número de variáveis.
         }
@@ -50,17 +50,27 @@ public class AlgebraBooleana
         for (int i = 0; i < in.length(); ++i) {
             switch (in.charAt(i)) {
             // Tokens que correspondem às operações booleanas.
-            case 'o': // Or.
-                out += 'v';
-                i += 1; // Pula o 'r'.
-                break;
-            case 'a': // And.
-                out += '^';
-                i += 2; // Pula o 'nd'.
-                break;
             case 'n': // Not.
                 out += '~'; // Pula o 'ot'.
                 i += 2;
+                break;
+
+            // Operações que podem receber muitos parâmetros devem ser tratadas
+            // separadamente. Usaremos tokens adicionais para indicar a
+            // quantidade.
+            case 'o': // Or.
+                /* System.err.println("Encontrei um Or com " + numParams(in, i) +
+                                   " parâmetros."); */
+                out += 'v';
+                out += numParams(in, i);
+                i += 1; // Pula o 'r'.
+                break;
+            case 'a': // And.
+                /* System.err.println("Encontrei um And com " + numParams(in, i) +
+                                   " parâmetros."); */
+                out += '^';
+                out += numParams(in, i);
+                i += 2; // Pula o 'nd'.
                 break;
 
             // Caracteres que serão ignorados.
@@ -75,6 +85,64 @@ public class AlgebraBooleana
         }
 
         return out;
+    }
+
+    // Função auxiliar que recebe uma expressão tokenizada e um índice e
+    // retorna quantos parâmetros são passados à função na expressão na posição
+    // apontada pelo índice. Ex.: se expr for "not(or(A, B, C))" e i for 4,
+    // devemos retornar 3, que é o número de parâmetros da função na posição 4
+    // (`or`). Não funcionará com 10 ou mais parâmetros, pois não sei como
+    // adaptar o Shunting Yard para isso.
+    public static int numParams(String expr, int i)
+    {
+        int ret = 0; // Contador de parâmetros, que retornaremos.
+        int parens = 0; // Contador de parenteses.
+        int len = expr.length();
+        boolean inParametro = false; // Indica se estamos num parâmetro.
+
+        // Encontra a abertura inicial de parênteses.
+        while (i < len && expr.charAt(i) != '(')
+            ++i;
+
+        if (i >= len)
+            ret = 0; // Não encontramos nenhum parênteses.
+
+        ++i; // Avança uma posição, para o primeiro parâmetro.
+
+        // Itera sobre o restante da expressão.
+        for (int j = i; j < len; ++j) {
+            char c = expr.charAt(j);
+
+            if (c == '(') {
+                ++parens;
+            } else if (c == ')') {
+                if (parens == 0) { // Chegamos ao parêntese final.
+                    if (inParametro)
+                        ++ret;
+                    j = len; // Quebra o loop.
+                } else {
+                    parens--;
+                }
+            } else if (c == ',' && parens == 0) {
+                // Vírgula no mesmo nível significa que há um novo parâmetro.
+                if (inParametro) {
+                    ++ret;
+                    inParametro = false;
+                }
+            } else if (parens == 0) {
+                // Qualquer outro caractere significa que estamos num
+                // parâmetro.
+                inParametro = true;
+            }
+        }
+
+        /*
+         * // Se ainda estamos num parâmetro, é necessário contá-lo.
+         * if (inParametro)
+         * ret++;
+         */
+
+        return ret;
     }
 
     // Recebe a expressão tokenizada e a lista de valores binários e retorna a
@@ -108,11 +176,15 @@ public class AlgebraBooleana
             char tok = expr.charAt(i); // ...leia um token.
 
             switch (tok) { // Se o token for...
-            case '0', '1': // ...um número:
+            case '0', '1': // ...um literal:
                 out += tok; // coloca-o na fila de saída.
                 break;
-            case '^', 'v', '~': // ...uma função:
+            case '~': // ...uma função simples:
                 op[++ind] = tok; // apende-o à stack de operadores.
+                break;
+            case '^', 'v': // ...uma função variádica:
+                op[++ind] = expr.charAt(++i); // apende o número de parâmetros à stack,
+                op[++ind] = tok; // e apende o token à stack.
                 break;
             case ',': // ...um separador de parâmetros:
                 // enquanto o operador no topo da stack não for `(`:
@@ -165,20 +237,32 @@ public class AlgebraBooleana
                 ops[++ind] = (tok == '1') ? true : false;
             } else if (tok == '~') { // Caso contrário, se for operador NOT...
                 ops[ind] = (ops[ind]) ? false : true; // Nega o valor no topo.
-            } else { // Caso contrário, é operador binário.
-                // Extrai os dois primeiros operandos na Stack™.
-                boolean a = ops[ind--];
-                boolean b = ops[ind--];
-                boolean res; // Resultado da operação em `a` e `b`.
+            } else { // Caso contrário, é operador variádico.
+                boolean res; // Resultado da operação.
+                int n = fila.charAt(++i) - '0'; // Número de operandos.
 
-                // Efetua a operação correta.
+                // System.err.println("Esse operador " + tok + " quer " + n + " operandos.");
+
+                // Verifica qual é o operador.
                 switch (tok) {
-                case '^':
-                    res = a && b;
+                case '^': // É um AND.
+                    res = true; // Inicializa o resultado.
+
+                    // Extrai os `n` operandos e os computa.
+                    for (int j = 0; j < n; ++j)
+                        res = ops[ind--] && res;
+
                     break;
-                case 'v':
-                    res = a || b;
+
+                case 'v': // É um OR.
+                    res = false; // Inicializa o resultado.
+
+                    // Extrai os `n` operandos e os computa.
+                    for (int j = 0; j < n; ++j)
+                        res = ops[ind--] || res;
+
                     break;
+
                 default:
                     throw new IllegalArgumentException("Operador inexiste!");
                 }
