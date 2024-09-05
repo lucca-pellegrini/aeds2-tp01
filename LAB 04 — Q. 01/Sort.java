@@ -4,31 +4,31 @@ public class Sort
 {
     public static void main(final String[] args)
     {
-        final Scanner sc = new Scanner(System.in);
-        int[] vec; // Referência ao vetor.
-        int num, mod; // Tamanho do vetor e módulo para comparação.
+        // Esse bloco `try` fecha o Scanner automaticamente no final.
+        try (Scanner sc = new Scanner(System.in)) {
+            int[] vec; // Referência ao vetor.
+            int num, mod; // Tamanho do vetor e módulo para comparação.
 
-        // Lê até encontrar “0 0”.
-        for (num = sc.nextInt(), mod = sc.nextInt(); (num != 0) || (mod != 0);
-             num = sc.nextInt(), mod = sc.nextInt()) {
-            // Mostra os valores entrados.
+            // Lê até encontrar “0 0”.
+            for (num = sc.nextInt(), mod = sc.nextInt(); (num != 0) || (mod != 0);
+                 num = sc.nextInt(), mod = sc.nextInt()) {
+                // Mostra os valores entrados.
+                System.out.println(num + " " + mod);
+
+                vec = new int[num]; // Instancia um novo arranjo de tamanho `num`.
+
+                for (int i = 0; i < vec.length; ++i) // Lê os N números.
+                    vec[i] = sc.nextInt();
+
+                ordenaInsercao(vec, mod);
+
+                for (final int val : vec) // Mostra os resultados.
+                    System.out.println(val);
+            }
+
+            // Mostra os últimos valores entrados.
             System.out.println(num + " " + mod);
-
-            vec = new int[num]; // Instancia um novo arranjo de tamanho `num`.
-
-            for (int i = 0; i < vec.length; ++i) // Lê os N números.
-                vec[i] = sc.nextInt();
-
-            ordenaInsercao(vec, mod);
-
-            for (final int val : vec) // Mostra os resultados.
-                System.out.println(val);
         }
-
-        // Mostra os últimos valores entrados.
-        System.out.println(num + " " + mod);
-
-        sc.close();
     }
 
     public static void ordenaInsercao(final int[] vec, final int mod)
