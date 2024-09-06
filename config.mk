@@ -17,6 +17,9 @@ JAVAC      := javac
 JAVAFLAGS  :=
 JAVACFLAGS :=
 
+# Como mostrar diferenças entre a saída do programa e a saída esperada.
+DIFF := $(shell if command -v colordiff >/dev/null 2>&1; then echo colordiff; else echo diff; fi)
+
 # Como compilar todos os objetos (alvo padrão).
 all: $(BIN)
 
@@ -29,11 +32,11 @@ all: $(BIN)
 
 testc: $(CBIN)
 	$(CBIN) < $(INPUT) > $(TEST)
-	@colordiff --report-identical-files --strip-trailing-cr $(OUTPUT) $(TEST)
+	@$(DIFF) --report-identical-files --strip-trailing-cr $(OUTPUT) $(TEST)
 
 testjava: $(JAVABIN)
 	$(JAVA) $(JAVACLASS) < $(INPUT) > $(TEST)
-	@colordiff --report-identical-files --strip-trailing-cr $(OUTPUT) $(TEST)
+	@$(DIFF) --report-identical-files --strip-trailing-cr $(OUTPUT) $(TEST)
 
 # Como excluir artefatos de compilação.
 clean:
