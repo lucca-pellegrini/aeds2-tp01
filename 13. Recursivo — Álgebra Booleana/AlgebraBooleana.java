@@ -301,15 +301,21 @@ public class AlgebraBooleana
 
     private static boolean calculaAnd(boolean[] ops, int ind, int n, boolean res)
     {
+        boolean ret;
         if (n == 0)
-            return res;
-        return calculaAnd(ops, ind - 1, n - 1, ops[ind] && res);
+            ret = res;
+        else
+            ret = calculaAnd(ops, ind - 1, n - 1, ops[ind] && res);
+        return ret;
     }
 
     private static boolean calculaOr(boolean[] ops, int ind, int n, boolean res)
     {
+        boolean ret;
         if (n == 0)
-            return res;
-        return calculaOr(ops, ind - 1, n - 1, ops[ind] || res);
+            ret = res;
+        else
+            ret = calculaOr(ops, ind - 1, n - 1, ops[ind] || res);
+        return ret;
     }
 }
