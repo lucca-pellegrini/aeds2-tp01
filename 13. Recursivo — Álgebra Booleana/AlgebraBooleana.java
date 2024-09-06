@@ -51,14 +51,17 @@ public class AlgebraBooleana
     // Recebe uma expressão e a converte para ser fácil de iterar.
     public static String tokeniza(String in, int i, String out)
     {
+        String ret = new String();
+
         if (i >= in.length()) {
-            return out;
+            ret = out;
         } else {
             switch (in.charAt(i)) {
             // Tokens que correspondem às operações booleanas.
             case 'n': // Not.
                 out += '~'; // Pula o 'ot'.
-                return tokeniza(in, i + 3, out);
+                ret = tokeniza(in, i + 3, out);
+                break;
 
             // Operações que podem receber muitos parâmetros devem ser tratadas
             // separadamente. Usaremos tokens adicionais para indicar a
@@ -68,24 +71,30 @@ public class AlgebraBooleana
                                " parâmetros."); */
                 out += 'v';
                 out += numParams(in, i);
-                return tokeniza(in, i + 2, out); // Pula o 'r'.
+                ret = tokeniza(in, i + 2, out); // Pula o 'r'.
+                break;
             case 'a': // And.
                 /* System.err.println("Encontrei um And com " + numParams(in, i) +
                                " parâmetros."); */
                 out += '^';
                 out += numParams(in, i);
-                return tokeniza(in, i + 3, out); // Pula o 'nd'.
+                ret = tokeniza(in, i + 3, out); // Pula o 'nd'.
+                break;
 
             // Caracteres que serão ignorados.
             case ' ':
-                return tokeniza(in, i + 1, out);
+                ret = tokeniza(in, i + 1, out);
+                break;
 
             // Comportamento padrão: copie os demais caracteres.
             default:
                 out += in.charAt(i);
-                return tokeniza(in, i + 1, out);
+                ret = tokeniza(in, i + 1, out);
+                break;
             }
         }
+
+        return ret;
     }
 
     // Função auxiliar que recebe uma expressão tokenizada e um índice e
