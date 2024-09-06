@@ -157,8 +157,10 @@ public class AlgebraBooleana
     // expressão tokenizada com os valores inseridos.
     public static String insere(String expr, int[] vals, int i, String out)
     {
+        String ret = new String();
+
         if (i >= expr.length()) {
-            return out;
+            ret = out;
         } else {
             char tok = expr.charAt(i);
 
@@ -168,8 +170,10 @@ public class AlgebraBooleana
                 out += tok;
             }
 
-            return insere(expr, vals, i + 1, out);
+            ret = insere(expr, vals, i + 1, out);
         }
+
+        return ret;
     }
 
     // Sobrecarga para iniciar a recursão.
