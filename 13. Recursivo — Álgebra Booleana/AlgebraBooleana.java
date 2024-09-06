@@ -32,7 +32,7 @@ public class AlgebraBooleana
 
             boolean res = avaliaRPN(fila); // Avalia a fila RPN booleana.
 
-            // System.err.println(fila + '\n');
+            // System.err.println(res + "\n");
 
             System.out.println(res ? 1 : 0);
 
@@ -53,38 +53,38 @@ public class AlgebraBooleana
     {
         if (i >= in.length()) {
             return out;
-        }
+        } else {
+            switch (in.charAt(i)) {
+            // Tokens que correspondem às operações booleanas.
+            case 'n': // Not.
+                out += '~'; // Pula o 'ot'.
+                return tokeniza(in, i + 3, out);
 
-        switch (in.charAt(i)) {
-        // Tokens que correspondem às operações booleanas.
-        case 'n': // Not.
-            out += '~'; // Pula o 'ot'.
-            return tokeniza(in, i + 3, out);
-
-        // Operações que podem receber muitos parâmetros devem ser tratadas
-        // separadamente. Usaremos tokens adicionais para indicar a
-        // quantidade.
-        case 'o': // Or.
-            /* System.err.println("Encontrei um Or com " + numParams(in, i) +
+            // Operações que podem receber muitos parâmetros devem ser tratadas
+            // separadamente. Usaremos tokens adicionais para indicar a
+            // quantidade.
+            case 'o': // Or.
+                /* System.err.println("Encontrei um Or com " + numParams(in, i) +
                                " parâmetros."); */
-            out += 'v';
-            out += numParams(in, i);
-            return tokeniza(in, i + 2, out); // Pula o 'r'.
-        case 'a': // And.
-            /* System.err.println("Encontrei um And com " + numParams(in, i) +
+                out += 'v';
+                out += numParams(in, i);
+                return tokeniza(in, i + 2, out); // Pula o 'r'.
+            case 'a': // And.
+                /* System.err.println("Encontrei um And com " + numParams(in, i) +
                                " parâmetros."); */
-            out += '^';
-            out += numParams(in, i);
-            return tokeniza(in, i + 3, out); // Pula o 'nd'.
+                out += '^';
+                out += numParams(in, i);
+                return tokeniza(in, i + 3, out); // Pula o 'nd'.
 
-        // Caracteres que serão ignorados.
-        case ' ':
-            return tokeniza(in, i + 1, out);
+            // Caracteres que serão ignorados.
+            case ' ':
+                return tokeniza(in, i + 1, out);
 
-        // Comportamento padrão: copie os demais caracteres.
-        default:
-            out += in.charAt(i);
-            return tokeniza(in, i + 1, out);
+            // Comportamento padrão: copie os demais caracteres.
+            default:
+                out += in.charAt(i);
+                return tokeniza(in, i + 1, out);
+            }
         }
     }
 
@@ -93,46 +93,58 @@ public class AlgebraBooleana
     // apontada pelo índice. Ex.: se expr for "not(or(A, B, C))" e i for 4,
     // devemos retornar 3, que é o número de parâmetros da função na posição 4
     // (`or`). Não funcionará com 10 ou mais parâmetros, pois não sei como
-    // adaptar o Shunting Yard para isso.
+    // adaptar o Shunting Yard para isso. Não consegui implementar com
+    // recursividade.
     public static int numParams(String expr, int i)
     {
-        return numParams(expr, i, 0, 0, false);
-    }
+        int ret = 0; // Contador de parâmetros, que retornaremos.
+        int parens = 0; // Contador de parenteses.
+        int len = expr.length();
+        boolean inParametro = false; // Indica se estamos num parâmetro.
 
-    public static int numParams(String expr, int i, int ret, int parens,
-                                boolean inParametro)
-    {
-        if (i >= expr.length()) {
-            return ret;
-        }
+        // Encontra a abertura inicial de parênteses.
+        while (i < len && expr.charAt(i) != '(')
+            ++i;
 
-        char c = expr.charAt(i);
+        if (i >= len)
+            ret = 0; // Não encontramos nenhum parênteses.
 
-        if (c == '(') {
-            return numParams(expr, i + 1, ret, parens + 1, inParametro);
-        } else if (c == ')') {
-            if (parens == 0) { // Chegamos ao parêntese final.
-                if (inParametro)
+        ++i; // Avança uma posição, para o primeiro parâmetro.
+
+        // Itera sobre o restante da expressão.
+        for (int j = i; j < len; ++j) {
+            char c = expr.charAt(j);
+
+            if (c == '(') {
+                ++parens;
+            } else if (c == ')') {
+                if (parens == 0) { // Chegamos ao parêntese final.
+                    if (inParametro)
+                        ++ret;
+                    j = len; // Quebra o loop.
+                } else {
+                    parens--;
+                }
+            } else if (c == ',' && parens == 0) {
+                // Vírgula no mesmo nível significa que há um novo parâmetro.
+                if (inParametro) {
                     ++ret;
-                return ret;
-            } else {
-                return numParams(expr, i + 1, ret, parens - 1, inParametro);
+                    inParametro = false;
+                }
+            } else if (parens == 0) {
+                // Qualquer outro caractere significa que estamos num
+                // parâmetro.
+                inParametro = true;
             }
-        } else if (c == ',' && parens == 0) {
-            // Vírgula no mesmo nível significa que há um novo parâmetro.
-            if (inParametro) {
-                ++ret;
-                inParametro = false;
-            }
-            return numParams(expr, i + 1, ret, parens, inParametro);
-        } else if (parens == 0) {
-            // Qualquer outro caractere significa que estamos num
-            // parâmetro.
-            inParametro = true;
-            return numParams(expr, i + 1, ret, parens, inParametro);
-        } else {
-            return numParams(expr, i + 1, ret, parens, inParametro);
         }
+
+        /*
+         * // Se ainda estamos num parâmetro, é necessário contá-lo.
+         * if (inParametro)
+         * ret++;
+         */
+
+        return ret;
     }
 
     // Sobrecarga para iniciar a recursão.
@@ -147,23 +159,22 @@ public class AlgebraBooleana
     {
         if (i >= expr.length()) {
             return out;
-        }
-
-        char tok = expr.charAt(i);
-
-        if (tok >= 'A' && tok <= 'Z') {
-            out += vals[tok - 'A'];
         } else {
-            out += tok;
-        }
+            char tok = expr.charAt(i);
 
-        return insere(expr, vals, i + 1, out);
+            if (tok >= 'A' && tok <= 'Z') {
+                out += vals[tok - 'A'];
+            } else {
+                out += tok;
+            }
+
+            return insere(expr, vals, i + 1, out);
+        }
     }
 
     // Sobrecarga para iniciar a recursão.
     public static String shuntingYard(String expr)
     {
-        // Não consegui descobrir como implementar essa Stack como um array.
         String out = new String(); // Fila de output.
         char[] op = new char[expr.length()]; // Stack de operadores.
         int ind = -1; // Índice da stack.
@@ -182,50 +193,50 @@ public class AlgebraBooleana
                 out += op[ind--];
             }
             return out;
-        }
+        } else {
+            char tok = expr.charAt(i); // ...leia um token.
 
-        char tok = expr.charAt(i); // ...leia um token.
+            switch (tok) { // Se o token for...
+            case '0', '1': // ...um literal:
+                out += tok; // coloca-o na fila de saída.
+                break;
+            case '~': // ...uma função simples:
+                op[++ind] = tok; // apende-o à stack de operadores.
+                break;
+            case '^', 'v': // ...uma função variádica:
+                op[++ind] = expr.charAt(++i); // apende o número de parâmetros à stack,
+                op[++ind] = tok; // e apende o token à stack.
+                break;
+            case ',': // ...um separador de parâmetros:
+                // enquanto o operador no topo da stack não for `(`:
+                while (op[ind] != '(')
+                    out += op[ind--]; // insere-o daí à fila de saída.
+                break;
+            case '(': // ...abertura de parênteses:
+                op[++ind] = tok; // apende-o à stack de operadores.
+                break;
+            case ')': // ...fechamento de parênteses:
+                // enquanto o operador no topo da stack não for `(`:
+                while (op[ind] != '(') {
+                    assert ind >= 0 : "Erro de parênteses!";
+                    out += op[ind--]; // insere-o daí à fila de saída.
+                }
 
-        switch (tok) { // Se o token for...
-        case '0', '1': // ...um literal:
-            out += tok; // coloca-o na fila de saída.
-            break;
-        case '~': // ...uma função simples:
-            op[++ind] = tok; // apende-o à stack de operadores.
-            break;
-        case '^', 'v': // ...uma função variádica:
-            op[++ind] = expr.charAt(++i); // apende o número de parâmetros à stack,
-            op[++ind] = tok; // e apende o token à stack.
-            break;
-        case ',': // ...um separador de parâmetros:
-            // enquanto o operador no topo da stack não for `(`:
-            while (op[ind] != '(')
-                out += op[ind--]; // insere-o daí à fila de saída.
-            break;
-        case '(': // ...abertura de parênteses:
-            op[++ind] = tok; // apende-o à stack de operadores.
-            break;
-        case ')': // ...fechamento de parênteses:
-            // enquanto o operador no topo da stack não for `(`:
-            while (op[ind] != '(') {
-                assert ind >= 0 : "Erro de parênteses!";
-                out += op[ind--]; // insere-o daí à fila de saída.
-            }
+                assert op[ind] == '(';
+                --ind; // Descarta o `(` no topo da stack.
 
-            assert op[ind] == '(';
-            --ind; // Descarta o `(` no topo da stack.
-
-            // Se há uma função no topo da stack:
-            switch (op[ind]) {
-            case '^', 'v', '~':
-                // insere-a daí à fila de saída.
-                out += op[ind--];
+                // Se há uma função no topo da stack:
+                switch (op[ind]) {
+                case '^', 'v', '~':
+                    // insere-a daí à fila de saída.
+                    out += op[ind--];
+                    break;
+                }
                 break;
             }
-            break;
-        }
 
-        return shuntingYard(expr, i + 1, out, op, ind);
+            return shuntingYard(expr, i + 1, out, op, ind);
+        }
     }
 
     // Sobrecarga para iniciar a recursão.
@@ -237,54 +248,68 @@ public class AlgebraBooleana
         return avaliaRPN(fila, ops, ind, 0);
     }
 
-    // WARN: Esse método ainda contém alguns loops `for`, preciso reescreve-los
-    // antes de enviar no Verde.
     public static boolean avaliaRPN(String fila, boolean[] ops, int ind, int i)
     {
+        /* System.err.println(fila);
+        System.err.print("[ ");
+        for (boolean b : ops)
+            System.err.print(b + " ");
+        System.err.println("]");
+        System.err.println(ind);
+        System.err.println(i); */
+
         if (i >= fila.length()) {
             return ops[0]; // O elemento que sobra na “Stack” é o resultado.
-        }
+        } else {
+            char tok = fila.charAt(i); // Extrai token da fila.
 
-        char tok = fila.charAt(i); // Extrai token da fila.
+            if (tok == '0' || tok == '1') { // Se for valor, insere na Stack.
+                ops[++ind] = (tok == '1');
+            } else if (tok == '~') { // Caso contrário, se for operador NOT...
+                ops[ind] = !ops[ind]; // Nega o valor no topo.
+            } else { // Caso contrário, é operador variádico.
+                boolean res; // Resultado da operação.
+                int n = fila.charAt(++i) - '0'; // Número de operandos.
 
-        if (tok == '0' || tok == '1') { // Se for valor, insere na Stack.
-            ops[++ind] = (tok == '1') ? true : false;
-        } else if (tok == '~') { // Caso contrário, se for operador NOT...
-            ops[ind] = (ops[ind]) ? false : true; // Nega o valor no topo.
-        } else { // Caso contrário, é operador variádico.
-            boolean res; // Resultado da operação.
-            int n = fila.charAt(++i) - '0'; // Número de operandos.
+                // System.err.println("Esse operador " + tok + " quer " + n + " operandos.");
 
-            // System.err.println("Esse operador " + tok + " quer " + n + " operandos.");
+                // Verifica qual é o operador.
+                switch (tok) {
+                case '^': // É um AND.
+                    res = true; // Inicializa o resultado.
+                    res = calculaAnd(ops, ind, n, res);
+                    ind -= n;
+                    break;
 
-            // Verifica qual é o operador.
-            switch (tok) {
-            case '^': // É um AND.
-                res = true; // Inicializa o resultado.
+                case 'v': // É um OR.
+                    res = false; // Inicializa o resultado.
+                    res = calculaOr(ops, ind, n, res);
+                    ind -= n;
+                    break;
 
-                // Extrai os `n` operandos e os computa.
-                for (int j = 0; j < n; ++j)
-                    res = ops[ind--] && res;
+                default:
+                    throw new IllegalArgumentException("Operador inexiste!");
+                }
 
-                break;
-
-            case 'v': // É um OR.
-                res = false; // Inicializa o resultado.
-
-                // Extrai os `n` operandos e os computa.
-                for (int j = 0; j < n; ++j)
-                    res = ops[ind--] || res;
-
-                break;
-
-            default:
-                throw new IllegalArgumentException("Operador inexiste!");
+                // Insere o resultado na Stack™.
+                ops[++ind] = res;
             }
 
-            // Insere o resultado na Stack™.
-            ops[++ind] = res;
+            return avaliaRPN(fila, ops, ind, i + 1);
         }
+    }
 
-        return avaliaRPN(fila, ops, ind, i + 1);
+    private static boolean calculaAnd(boolean[] ops, int ind, int n, boolean res)
+    {
+        if (n == 0)
+            return res;
+        return calculaAnd(ops, ind - 1, n - 1, ops[ind] && res);
+    }
+
+    private static boolean calculaOr(boolean[] ops, int ind, int n, boolean res)
+    {
+        if (n == 0)
+            return res;
+        return calculaOr(ops, ind - 1, n - 1, ops[ind] || res);
     }
 }
