@@ -250,6 +250,8 @@ public class AlgebraBooleana
 
     public static boolean avaliaRPN(String fila, boolean[] ops, int ind, int i)
     {
+        boolean ret;
+
         /* System.err.println(fila);
         System.err.print("[ ");
         for (boolean b : ops)
@@ -259,7 +261,7 @@ public class AlgebraBooleana
         System.err.println(i); */
 
         if (i >= fila.length()) {
-            return ops[0]; // O elemento que sobra na “Stack” é o resultado.
+            ret = ops[0]; // O elemento que sobra na “Stack” é o resultado.
         } else {
             char tok = fila.charAt(i); // Extrai token da fila.
 
@@ -295,8 +297,10 @@ public class AlgebraBooleana
                 ops[++ind] = res;
             }
 
-            return avaliaRPN(fila, ops, ind, i + 1);
+            ret = avaliaRPN(fila, ops, ind, i + 1);
         }
+
+        return ret;
     }
 
     private static boolean calculaAnd(boolean[] ops, int ind, int n, boolean res)
