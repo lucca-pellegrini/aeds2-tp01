@@ -167,7 +167,6 @@ public class AlgebraBooleana
     // De <https://en.wikipedia.org/wiki/Shunting_yard_algorithm>
     public static String shuntingYard(String expr)
     {
-        // Não consegui descobrir como implementar essa Stack como um array.
         String out = new String(); // Fila de output.
         char[] op = new char[expr.length()]; // Stack de operadores.
         int ind = -1; // Índice da stack.
