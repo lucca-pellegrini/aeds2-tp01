@@ -29,11 +29,11 @@ all: $(BIN)
 
 testc: $(CBIN)
 	$(CBIN) < $(INPUT) > $(TEST)
-	@diff --report-identical-files --strip-trailing-cr $(OUTPUT) $(TEST)
+	@colordiff --report-identical-files --strip-trailing-cr $(OUTPUT) $(TEST)
 
 testjava: $(JAVABIN)
 	$(JAVA) $(JAVACLASS) < $(INPUT) > $(TEST)
-	@diff --report-identical-files --strip-trailing-cr $(OUTPUT) $(TEST)
+	@colordiff --report-identical-files --strip-trailing-cr $(OUTPUT) $(TEST)
 
 # Como excluir artefatos de compilação.
 clean:
