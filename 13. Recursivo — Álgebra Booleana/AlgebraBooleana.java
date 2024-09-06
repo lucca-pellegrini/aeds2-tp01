@@ -7,169 +7,336 @@ public class AlgebraBooleana
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt(); // Lê o número de variáveis.
 
-        processInput(n, sc);
+        while (n != 0) {
+            // Lê as variáveis booleanas.
+            int[] entradas = new int[n];
+            for (int i = 0; i < n; ++i)
+                entradas[i] = sc.nextInt();
+
+            // Lê a expressão booleanas.
+            String expr = sc.nextLine();
+
+            /* for (int i : entradas)
+                System.err.print(i + " ");
+            System.err.println();
+            System.err.println(expr); */
+
+            expr = tokeniza(expr); // Preprocessa a expressão.
+            expr = insere(expr, entradas); // Insere as entradas.
+
+            // System.err.println(expr);
+
+            String fila = shuntingYard(expr); // Constrói a fila, como em RPN.
+
+            // System.err.println(fila);
+
+            boolean res = avaliaRPN(fila); // Avalia a fila RPN booleana.
+
+            // System.err.println(res + "\n");
+
+            System.out.println(res ? 1 : 0);
+
+            n = sc.nextInt(); // Lê o próximo número de variáveis.
+        }
 
         sc.close();
     }
 
-    public static void processInput(int n, Scanner sc)
-    {
-        if (n == 0)
-            return;
-
-        // Lê as variáveis booleanas.
-        int[] entradas = new int[n];
-        for (int i = 0; i < n; ++i)
-            entradas[i] = sc.nextInt();
-
-        sc.nextLine(); // Consome a nova linha após as entradas.
-
-        // Lê a expressão booleanas.
-        String expr = sc.nextLine();
-
-        expr = tokeniza(expr); // Preprocessa a expressão.
-        expr = insere(expr, entradas); // Insere as entradas.
-
-        String fila = shuntingYard(expr); // Constrói a fila, como em RPN.
-
-        boolean res = avaliaRPN(fila); // Avalia a fila RPN booleana.
-
-        System.out.println(res ? 1 : 0);
-
-        n = sc.nextInt(); // Lê o próximo número de variáveis.
-        // Chamada recursiva para o próximo conjunto de entradas.
-        processInput(n, sc);
-    }
-
+    // Sobrecarga para iniciar a recursão.
     public static String tokeniza(String in)
     {
         return tokeniza(in, 0, new String());
     }
 
-    private static String tokeniza(String in, int index, String out)
+    // Recebe uma expressão e a converte para ser fácil de iterar.
+    public static String tokeniza(String in, int i, String out)
     {
-        if (index >= in.length())
-            return out;
+        String ret = new String();
 
-        switch (in.charAt(index)) {
-        case 'o': // Or.
-            out += 'v';
-            return tokeniza(in, index + 2, out);
-        case 'a': // And.
-            out += '^';
-            return tokeniza(in, index + 3, out);
-        case 'n': // Not.
-            out += '~';
-            return tokeniza(in, index + 3, out);
-        case ' ':
-            return tokeniza(in, index + 1, out);
-        default:
-            out += in.charAt(index);
-            return tokeniza(in, index + 1, out);
+        if (i >= in.length()) {
+            ret = out;
+        } else {
+            switch (in.charAt(i)) {
+            // Tokens que correspondem às operações booleanas.
+            case 'n': // Not.
+                out += '~'; // Pula o 'ot'.
+                ret = tokeniza(in, i + 3, out);
+                break;
+
+            // Operações que podem receber muitos parâmetros devem ser tratadas
+            // separadamente. Usaremos tokens adicionais para indicar a
+            // quantidade.
+            case 'o': // Or.
+                /* System.err.println("Encontrei um Or com " + numParams(in, i) +
+                               " parâmetros."); */
+                out += 'v';
+                out += numParams(in, i);
+                ret = tokeniza(in, i + 2, out); // Pula o 'r'.
+                break;
+            case 'a': // And.
+                /* System.err.println("Encontrei um And com " + numParams(in, i) +
+                               " parâmetros."); */
+                out += '^';
+                out += numParams(in, i);
+                ret = tokeniza(in, i + 3, out); // Pula o 'nd'.
+                break;
+
+            // Caracteres que serão ignorados.
+            case ' ':
+                ret = tokeniza(in, i + 1, out);
+                break;
+
+            // Comportamento padrão: copie os demais caracteres.
+            default:
+                out += in.charAt(i);
+                ret = tokeniza(in, i + 1, out);
+                break;
+            }
         }
+
+        return ret;
     }
 
+    // Função auxiliar que recebe uma expressão tokenizada e um índice e
+    // retorna quantos parâmetros são passados à função na expressão na posição
+    // apontada pelo índice. Ex.: se expr for "not(or(A, B, C))" e i for 4,
+    // devemos retornar 3, que é o número de parâmetros da função na posição 4
+    // (`or`). Não funcionará com 10 ou mais parâmetros, pois não sei como
+    // adaptar o Shunting Yard para isso. Não consegui implementar com
+    // recursividade.
+    public static int numParams(String expr, int i)
+    {
+        int ret = 0; // Contador de parâmetros, que retornaremos.
+        int parens = 0; // Contador de parenteses.
+        int len = expr.length();
+        boolean inParametro = false; // Indica se estamos num parâmetro.
+
+        // Encontra a abertura inicial de parênteses.
+        while (i < len && expr.charAt(i) != '(')
+            ++i;
+
+        if (i >= len)
+            ret = 0; // Não encontramos nenhum parênteses.
+
+        ++i; // Avança uma posição, para o primeiro parâmetro.
+
+        // Itera sobre o restante da expressão.
+        for (int j = i; j < len; ++j) {
+            char c = expr.charAt(j);
+
+            if (c == '(') {
+                ++parens;
+            } else if (c == ')') {
+                if (parens == 0) { // Chegamos ao parêntese final.
+                    if (inParametro)
+                        ++ret;
+                    j = len; // Quebra o loop.
+                } else {
+                    parens--;
+                }
+            } else if (c == ',' && parens == 0) {
+                // Vírgula no mesmo nível significa que há um novo parâmetro.
+                if (inParametro) {
+                    ++ret;
+                    inParametro = false;
+                }
+            } else if (parens == 0) {
+                // Qualquer outro caractere significa que estamos num
+                // parâmetro.
+                inParametro = true;
+            }
+        }
+
+        /*
+         * // Se ainda estamos num parâmetro, é necessário contá-lo.
+         * if (inParametro)
+         * ret++;
+         */
+
+        return ret;
+    }
+
+    // Sobrecarga para iniciar a recursão.
     public static String insere(String expr, int[] vals)
     {
         return insere(expr, vals, 0, new String());
     }
 
-    private static String insere(String expr, int[] vals, int index, String out)
+    // Recebe a expressão tokenizada e a lista de valores binários e retorna a
+    // expressão tokenizada com os valores inseridos.
+    public static String insere(String expr, int[] vals, int i, String out)
     {
-        if (index >= expr.length())
-            return out;
+        String ret = new String();
 
-        char tok = expr.charAt(index);
-        if (tok >= 'A' && tok <= 'Z')
-            out += vals[tok - 'A'];
-        else
-            out += tok;
+        if (i >= expr.length()) {
+            ret = out;
+        } else {
+            char tok = expr.charAt(i);
 
-        return insere(expr, vals, index + 1, out);
+            if (tok >= 'A' && tok <= 'Z') {
+                out += vals[tok - 'A'];
+            } else {
+                out += tok;
+            }
+
+            ret = insere(expr, vals, i + 1, out);
+        }
+
+        return ret;
     }
 
+    // Sobrecarga para iniciar a recursão.
     public static String shuntingYard(String expr)
     {
-        return shuntingYard(expr, 0, new String(), new char[expr.length()], -1);
+        String out = new String(); // Fila de output.
+        char[] op = new char[expr.length()]; // Stack de operadores.
+        int ind = -1; // Índice da stack.
+
+        return shuntingYard(expr, 0, out, op, ind);
     }
 
-    private static String shuntingYard(String expr, int index, String out, char[] op,
-                                       int ind)
+    // Implementação do algoritmo Shunting Yard para esse problema.
+    // De <https://en.wikipedia.org/wiki/Shunting_yard_algorithm>
+    public static String shuntingYard(String expr, int i, String out, char[] op, int ind)
     {
-        if (index >= expr.length()) {
+        String ret = new String();
+
+        if (i >= expr.length()) {
+            // Terminados os tokens, apende os itens restantes na stack à fila.
             while (ind >= 0) {
                 assert op[ind] != '(' : "Erro de parênteses!";
                 out += op[ind--];
             }
-            return out;
-        }
+            ret = out;
+        } else {
+            char tok = expr.charAt(i); // ...leia um token.
 
-        char tok = expr.charAt(index);
+            switch (tok) { // Se o token for...
+            case '0', '1': // ...um literal:
+                out += tok; // coloca-o na fila de saída.
+                break;
+            case '~': // ...uma função simples:
+                op[++ind] = tok; // apende-o à stack de operadores.
+                break;
+            case '^', 'v': // ...uma função variádica:
+                op[++ind] = expr.charAt(++i); // apende o número de parâmetros à stack,
+                op[++ind] = tok; // e apende o token à stack.
+                break;
+            case ',': // ...um separador de parâmetros:
+                // enquanto o operador no topo da stack não for `(`:
+                while (op[ind] != '(')
+                    out += op[ind--]; // insere-o daí à fila de saída.
+                break;
+            case '(': // ...abertura de parênteses:
+                op[++ind] = tok; // apende-o à stack de operadores.
+                break;
+            case ')': // ...fechamento de parênteses:
+                // enquanto o operador no topo da stack não for `(`:
+                while (op[ind] != '(') {
+                    assert ind >= 0 : "Erro de parênteses!";
+                    out += op[ind--]; // insere-o daí à fila de saída.
+                }
 
-        switch (tok) {
-        case '0', '1':
-            out += tok;
-            break;
-        case '^', 'v', '~':
-            op[++ind] = tok;
-            break;
-        case ',':
-            while (op[ind] != '(')
-                out += op[ind--];
-            break;
-        case '(':
-            op[++ind] = tok;
-            break;
-        case ')':
-            while (op[ind] != '(') {
-                assert ind >= 0 : "Erro de parênteses!";
-                out += op[ind--];
+                assert op[ind] == '(';
+                --ind; // Descarta o `(` no topo da stack.
+
+                // Se há uma função no topo da stack:
+                switch (op[ind]) {
+                case '^', 'v', '~':
+                    // insere-a daí à fila de saída.
+                    out += op[ind--];
+                    break;
+                }
+                break;
             }
-            assert op[ind] == '(';
-            --ind;
-            if (ind >= 0 && (op[ind] == '^' || op[ind] == 'v' || op[ind] == '~'))
-                out += op[ind--];
-            break;
+
+            ret = shuntingYard(expr, i + 1, out, op, ind);
         }
 
-        return shuntingYard(expr, index + 1, out, op, ind);
+        return ret;
     }
 
+    // Sobrecarga para iniciar a recursão.
     public static boolean avaliaRPN(String fila)
     {
-        return avaliaRPN(fila, 0, new boolean[fila.length()], -1);
+        boolean[] ops = new boolean[fila.length()]; // Nossa Stack™ da Shopee.
+        int ind = -1; // O “índice” da nossa “Stack”.
+
+        return avaliaRPN(fila, ops, ind, 0);
     }
 
-    private static boolean avaliaRPN(String fila, int index, boolean[] ops, int ind)
+    public static boolean avaliaRPN(String fila, boolean[] ops, int ind, int i)
     {
-        if (index >= fila.length())
-            return ops[0];
+        boolean ret;
 
-        char tok = fila.charAt(index);
+        /* System.err.println(fila);
+        System.err.print("[ ");
+        for (boolean b : ops)
+            System.err.print(b + " ");
+        System.err.println("]");
+        System.err.println(ind);
+        System.err.println(i); */
 
-        if (tok == '0' || tok == '1') {
-            ops[++ind] = (tok == '1');
-        } else if (tok == '~') {
-            ops[ind] = !ops[ind];
+        if (i >= fila.length()) {
+            ret = ops[0]; // O elemento que sobra na “Stack” é o resultado.
         } else {
-            boolean a = ops[ind--];
-            boolean b = ops[ind--];
-            boolean res;
+            char tok = fila.charAt(i); // Extrai token da fila.
 
-            switch (tok) {
-            case '^':
-                res = a && b;
-                break;
-            case 'v':
-                res = a || b;
-                break;
-            default:
-                throw new IllegalArgumentException("Operador inexiste!");
+            if (tok == '0' || tok == '1') { // Se for valor, insere na Stack.
+                ops[++ind] = (tok == '1');
+            } else if (tok == '~') { // Caso contrário, se for operador NOT...
+                ops[ind] = !ops[ind]; // Nega o valor no topo.
+            } else { // Caso contrário, é operador variádico.
+                boolean res; // Resultado da operação.
+                int n = fila.charAt(++i) - '0'; // Número de operandos.
+
+                // System.err.println("Esse operador " + tok + " quer " + n + " operandos.");
+
+                // Verifica qual é o operador.
+                switch (tok) {
+                case '^': // É um AND.
+                    res = true; // Inicializa o resultado.
+                    res = calculaAnd(ops, ind, n, res);
+                    ind -= n;
+                    break;
+
+                case 'v': // É um OR.
+                    res = false; // Inicializa o resultado.
+                    res = calculaOr(ops, ind, n, res);
+                    ind -= n;
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Operador inexiste!");
+                }
+
+                // Insere o resultado na Stack™.
+                ops[++ind] = res;
             }
 
-            ops[++ind] = res;
+            ret = avaliaRPN(fila, ops, ind, i + 1);
         }
 
-        return avaliaRPN(fila, index + 1, ops, ind);
+        return ret;
+    }
+
+    private static boolean calculaAnd(boolean[] ops, int ind, int n, boolean res)
+    {
+        boolean ret;
+        if (n == 0)
+            ret = res;
+        else
+            ret = calculaAnd(ops, ind - 1, n - 1, ops[ind] && res);
+        return ret;
+    }
+
+    private static boolean calculaOr(boolean[] ops, int ind, int n, boolean res)
+    {
+        boolean ret;
+        if (n == 0)
+            ret = res;
+        else
+            ret = calculaOr(ops, ind - 1, n - 1, ops[ind] || res);
+        return ret;
     }
 }
