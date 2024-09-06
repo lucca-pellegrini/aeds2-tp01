@@ -1,7 +1,18 @@
-# Trabalho Prático 1 (Em Progresso)
+# Trabalho Prático 1
 
-Aqui se encontram ~~todas as~~ (algumas das) questões do primeiro trabalho
-prático de Algoritmos e Estruturas de Dados 2 (1610100) de 2024/2.
+Aqui se encontram todas as questões do primeiro trabalho prático de Algoritmos
+e Estruturas de Dados 2 (1610100) de 2024/2.
+
+## Resultados
+
+A maioria das implementações tem notas de 100% no Verde, com as seguintes
+exceções:
+
+  11. Essa questão, com nota de 100% no meu Linux, tem apenas 98,65% no Verde,
+      pois as configurações de localização no Verde — aparentemente — fazem com
+      que os caracteres especiais sejam indevidamente desconsiderados.
+  13. Não consegui fazer essa implementação funcionar de forma recursiva, pela
+      complexidade do algoritmo.
 
 ## Como testar
 
