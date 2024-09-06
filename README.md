@@ -31,7 +31,8 @@ done
 ```
 
 Dependendo do seu sistema, pode ser nececssário instalar
-[GNU Diffutils](https://www.gnu.org/software/diffutils).
+[GNU Diffutils](https://www.gnu.org/software/diffutils) e, opcionalmente,
+[colordiff](https://www.colordiff.org/).
 
 Para cada teste que tiver sucesso, você verá uma linha semelhante a essa:
 ```txt
