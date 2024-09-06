@@ -186,13 +186,15 @@ public class AlgebraBooleana
     // De <https://en.wikipedia.org/wiki/Shunting_yard_algorithm>
     public static String shuntingYard(String expr, int i, String out, char[] op, int ind)
     {
+        String ret = new String();
+
         if (i >= expr.length()) {
             // Terminados os tokens, apende os itens restantes na stack à fila.
             while (ind >= 0) {
                 assert op[ind] != '(' : "Erro de parênteses!";
                 out += op[ind--];
             }
-            return out;
+            ret = out;
         } else {
             char tok = expr.charAt(i); // ...leia um token.
 
@@ -235,8 +237,10 @@ public class AlgebraBooleana
                 break;
             }
 
-            return shuntingYard(expr, i + 1, out, op, ind);
+            ret = shuntingYard(expr, i + 1, out, op, ind);
         }
+
+        return ret;
     }
 
     // Sobrecarga para iniciar a recursão.
